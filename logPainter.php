@@ -2,6 +2,8 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 
+
+
 <!--COC Log Painter @Fengyu-->
 <!-- Version 2.1  01/31/2016 La>
 <!-- Version 2.2  09/17/2016   >
@@ -14,6 +16,7 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
+
 <!-- 代码压缩懒得做了啊，写的乱糟糟的 =。= >
 
 <head>
@@ -23,7 +26,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 <!-- bootstrap CDN-->
 
 <script src="bootstrap.min.js"></script>
-<!-- Latest compiled and minified CSS -->
+<!--  Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 </head>
 
@@ -109,7 +112,7 @@ li{
 <div id = "div_button" class="div_center">
 	<div>
 	<button  class="btn btn-info" id = "button_log_command">指令过滤 On</button>
-	<button  class="btn btn-warning" id = "button_log_other">（开头内容过滤 Off</button>
+	<button  class="btn btn-warning" id = "button_log_other">（开头内容过滤 On</button>
 	<button  class="btn btn-info" id = "button_log_pic_text"> [图片]过滤 On</button>
 	</div>
 	<p></p>
@@ -122,7 +125,7 @@ li{
 <br>
 <div id="div_names">
 </div>
-<div  class="div_center">没有地方放log的话，可以<a href="http://www.goddessfantasy.net/bbs/index.php?action=post;board=1209.0" target="_blank" >贴到风羽的果园版</a></div>
+<div  class="div_center"><a href="http://www.goddessfantasy.net/bbs/index.php?action=post;board=1209.0" target="_blank" >贴到风羽的果园版</a></div>
 <div id="div_log">
 <h5>复制预览部分内容可得TXT文本，输出部分为果园用代码</h5>
 
@@ -162,6 +165,22 @@ li{
 
 	$(d).ready(function(){
 		$("#div_log").hide();
+		
+		var input = "<?php
+		$name = $_GET['log'];
+		if($name != null){
+			$filename = "logs/".$name;
+			$fp=fopen($filename,"r");
+			$str = fread($fp,filesize($filename));
+			$str = str_replace("\r\n","\\r\\n",$str);
+			echo($str);
+		}
+		?>";
+		$("#textarea_log_input").val(input);
+		if(input != ""){
+			$("#button_log_analyze").click();
+			$("html,body").animate({scrollTop: $("#div_names").offset().top}, 500);
+		}
 	});
 	$("#button_log_command").click(function(){
 		commandFilter = !commandFilter;
@@ -222,7 +241,7 @@ li{
 	//Default color of time
 	var timeColor = "silver"; 
 	var commandFilter = true;
-	var otherFilter = false;
+	var otherFilter = true;
 	var picTextFilter = true;
 	//TODO_IF_NEEDED it can be extended to more colors a player so that name and content can be seperated clearly
 	function Player(name, colorIndex){
